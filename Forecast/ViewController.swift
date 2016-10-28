@@ -8,17 +8,39 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var todayDate: UILabel!
+    @IBOutlet weak var todayTemperature: UILabel!
+    @IBOutlet weak var place: UILabel!
+    @IBOutlet weak var todayWeather: UILabel!
+    @IBOutlet weak var todayWeatherImageView: UIImageView!
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        tableView.dataSource = self
+        tableView.delegate = self
     }
     
     override var prefersStatusBarHidden: Bool {
-        
         return true
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "weather", for: indexPath)
+        
+        return cell
     }
 
 }
