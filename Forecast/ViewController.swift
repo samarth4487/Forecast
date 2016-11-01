@@ -17,11 +17,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var todayWeatherImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     
+    var currentWeatherData = CurrentWeatherData()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.delegate = self
+        
+        currentWeatherData.downloadCurrentWeatherDetails {
+            // Setup the UI after the download is completed
+        }
     }
     
     override var prefersStatusBarHidden: Bool {

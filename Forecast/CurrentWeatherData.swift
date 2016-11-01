@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class GetWeatherData {
+class CurrentWeatherData {
     
     var _cityName: String!
     var _date: String!
@@ -51,5 +51,16 @@ class GetWeatherData {
         }
         
         return _currentTemperature
+    }
+    
+    func downloadCurrentWeatherDetails(completed: DownloadComplete) {
+        
+        let downloadURL = URL(string: CURRENT_WEATHER_URL)
+        Alamofire.request(downloadURL!).responseJSON {
+            response in
+            let result = response.result.value
+            print(result!)
+        }
+        completed()
     }
 }
