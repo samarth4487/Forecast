@@ -18,8 +18,8 @@ class FutureWeatherDataCell: UITableViewCell {
     
     func configureCell(futureWeatherData: FutureWeatherData) {
         
-        highTemperature.text = futureWeatherData.highTemperature
-        lowTemperature.text = futureWeatherData.lowTemperature
+        highTemperature.text = "\(futureWeatherData.highTemperature)°"
+        lowTemperature.text = "\(futureWeatherData.lowTemperature)°"
         futureWeatherType.text = futureWeatherData.weatherType
         futureDay.text = futureWeatherData.date
         futureWeatherImageView.image = UIImage(named: futureWeatherData.weatherType)

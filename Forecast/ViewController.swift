@@ -53,6 +53,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         let futureWeatherData = FutureWeatherData(weatherDict: obj)
                         self.futureWeatherDataValues.append(futureWeatherData)
                     }
+                    self.futureWeatherDataValues.remove(at: 0)
+                    self.tableView.reloadData()
                 }
             }
             completed()
@@ -64,14 +66,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return futureWeatherDataValues.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "weather", for: indexPath)
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "weather", for: indexPath) as? FutureWeatherDataCell {
+            
+            let futureWeatherDataValue = futureWeatherDataValues[indexPath.row]
+            cell.configureCell(futureWeatherData: futureWeatherDataValue)
+            
+            return cell
+        } else {
+            
+            return FutureWeatherDataCell()
+        }
         
-        return cell
     }
     
     func updateMainUI() {
