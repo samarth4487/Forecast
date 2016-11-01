@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -18,6 +19,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tableView: UITableView!
     
     var currentWeatherData = CurrentWeatherData()
+    var futureWeatherDataValues = [FutureWeatherData]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,13 +28,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.delegate = self
         
         currentWeatherData.downloadCurrentWeatherDetails {
-            
-            self.updateMainUI()
+            self.downloadFutureWeatherDetails {
+                self.updateMainUI()
+            }
         }
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    func downloadFutureWeatherDetails(completed: @escaping DownloadComplete) {
+        
+        let forecastURL = URL(string: FUTURE_WEATHER_URL)
+        Alamofire.request(forecastURL!).responseJSON {
+            response in
+            let result = response.result
+            
+            if let dict = result.value as? Dictionary<String, Any> {
+                
+                if let list = dict["list"] as? [Dictionary<String, Any>] {
+                    
+                    for obj in list {
+                        let futureWeatherData = FutureWeatherData(weatherDict: obj)
+                        self.futureWeatherDataValues.append(futureWeatherData)
+                    }
+                }
+            }
+            completed()
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -53,7 +77,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func updateMainUI() {
         
         todayDate.text = currentWeatherData.date
-        todayTemperature.text = "\(currentWeatherData.currentTemperature)"
+        todayTemperature.text = "\(currentWeatherData.currentTemperature)°"
         todayWeather.text = currentWeatherData.weatherType
         place.text = currentWeatherData.cityName
         todayWeatherImageView.image = UIImage(named: currentWeatherData.weatherType)
